@@ -731,6 +731,398 @@
   <p style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.35em;color:var(--gold-dark);margin-top:1rem;opacity:0.8;">SEALED WITH THE QUEEN'S MARK &middot; TAP THE SCROLL TO OPEN</p>
 </section>
 
+<!-- THE 10 SCROLLS — PPT IN SCROLL FORM -->
+<section id="scrolls-section" style="max-width:1100px;margin:0 auto;padding:clamp(4rem,8vw,8rem) clamp(1rem,5vw,3rem);position:relative;z-index:2;">
+  <div class="section-rule"></div>
+  <h2 class="section-heading">The Ten Sacred Scrolls</h2>
+  <p class="section-sub">10 Cheezein Jo Main Pyaar Karta Hoon Vanshika Se<br><em style="font-size:0.9em;color:var(--gold-dark);">"Tum ek gorakh dhanda ho..." — Nusrat Fateh Ali Khan</em></p>
+
+  <style>
+    .scroll-spine {
+      position: relative;
+      padding-left: clamp(2rem, 6vw, 5rem);
+    }
+    /* vertical thread */
+    .scroll-spine::before {
+      content: '';
+      position: absolute;
+      left: clamp(0.6rem, 2.2vw, 1.8rem);
+      top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(180deg, transparent, var(--gold) 8%, var(--gold) 92%, transparent);
+    }
+    .sacred-scroll {
+      position: relative;
+      margin-bottom: clamp(2rem, 5vw, 3.5rem);
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .sacred-scroll.visible { opacity: 1; transform: translateX(0); }
+
+    /* node on timeline */
+    .sacred-scroll::before {
+      content: '';
+      position: absolute;
+      left: clamp(-2.5rem, -6.5vw, -5.3rem);
+      top: 1.4rem;
+      width: 14px; height: 14px;
+      background: var(--gold-dark);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(201,168,76,0.5);
+    }
+    .sacred-scroll.active-scroll::before {
+      background: var(--gold);
+      box-shadow: 0 0 16px rgba(201,168,76,0.9);
+    }
+
+    .scroll-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      padding: 1rem 1.4rem;
+      background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(0,0,0,0.4));
+      border: 1px solid rgba(201,168,76,0.2);
+      border-left: 3px solid var(--gold-dark);
+      transition: border-color 0.3s, background 0.3s;
+      user-select: none;
+    }
+    .scroll-header:hover,
+    .sacred-scroll.active-scroll .scroll-header {
+      border-color: var(--gold);
+      border-left-color: var(--gold);
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(0,0,0,0.5));
+    }
+    .scroll-num {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      color: var(--gold-dark);
+      min-width: 2.8rem;
+      line-height: 1;
+    }
+    .sacred-scroll.active-scroll .scroll-num { color: var(--gold); }
+    .scroll-title-wrap { flex: 1; }
+    .scroll-urdu {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.55rem, 1.4vw, 0.7rem);
+      letter-spacing: 0.35em;
+      color: var(--gold-dark);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .scroll-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      color: var(--snow);
+      font-weight: 600;
+    }
+    .scroll-caret {
+      width: 20px; height: 20px;
+      border-right: 1.5px solid var(--gold-dark);
+      border-bottom: 1.5px solid var(--gold-dark);
+      transform: rotate(45deg);
+      transition: transform 0.35s ease;
+      margin-right: 0.3rem;
+      flex-shrink: 0;
+    }
+    .sacred-scroll.active-scroll .scroll-caret {
+      transform: rotate(-135deg);
+      border-color: var(--gold);
+    }
+
+    /* unrolled content */
+    .scroll-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.55s cubic-bezier(0.4,0,0.2,1);
+    }
+    .sacred-scroll.active-scroll .scroll-body { max-height: 600px; }
+    .scroll-inner {
+      border: 1px solid rgba(201,168,76,0.15);
+      border-top: none;
+      padding: clamp(1.2rem, 3vw, 2rem) clamp(1rem, 2.5vw, 1.8rem);
+      background: linear-gradient(180deg, rgba(201,168,76,0.04), rgba(0,0,0,0.55));
+      display: grid;
+      gap: 1.2rem;
+    }
+    /* UTD slide gets special red treatment */
+    .scroll-utd .scroll-inner { background: linear-gradient(180deg, rgba(218,2,14,0.08), rgba(0,0,0,0.6)); }
+    .scroll-utd .scroll-header { border-left-color: #da020e; }
+    .scroll-utd.active-scroll .scroll-header { border-color: #da020e; }
+    .scroll-utd .scroll-num { color: #da020e; }
+    .scroll-utd .scroll-caret { border-color: #da020e; }
+    .scroll-utd .scroll-urdu { color: #da020e; opacity: 0.7; }
+    .scroll-utd.active-scroll::before { background: #da020e; border-color: #da020e; box-shadow: 0 0 16px rgba(218,2,14,0.7); }
+
+    .scroll-body-text {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      line-height: 1.85;
+      color: var(--snow);
+    }
+    .scroll-quote {
+      border-left: 2px solid var(--gold-dark);
+      padding: 0.6rem 1rem;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+      color: var(--gold);
+      font-style: normal;
+      letter-spacing: 0.04em;
+    }
+    .scroll-utd .scroll-quote { border-left-color: #da020e; color: #fbe122; }
+
+    /* UTD badge row */
+    .utd-badges {
+      display: flex; gap: 0.8rem; flex-wrap: wrap;
+    }
+    .utd-badge {
+      background: #1a0000;
+      border: 1px solid #da020e;
+      color: #fbe122;
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      padding: 0.3rem 0.8rem;
+      text-transform: uppercase;
+    }
+
+    /* little things grid */
+    .things-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.8rem;
+    }
+    .thing-card {
+      background: rgba(201,168,76,0.05);
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 0.7rem 1rem;
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: 0.92rem;
+      color: var(--ash);
+      line-height: 1.6;
+    }
+    .thing-num {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      color: var(--gold-dark);
+      letter-spacing: 0.3em;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    /* final scroll */
+    .scroll-final .scroll-header { border-left-color: var(--ice-blue); }
+    .scroll-final .scroll-inner { background: linear-gradient(180deg, rgba(168,200,232,0.06), rgba(0,0,0,0.6)); }
+    .scroll-final .scroll-num { color: var(--ice-blue); }
+    .scroll-final.active-scroll::before { background: var(--ice-blue); border-color: var(--ice-blue); box-shadow: 0 0 16px rgba(168,200,232,0.8); }
+    .scroll-final .scroll-caret { border-color: var(--ice-blue); }
+  </style>
+
+  <div class="scroll-spine" id="scrollSpine">
+
+    <!-- SCROLL 1 — HIMMAT -->
+    <div class="sacred-scroll" data-scroll="1">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">01</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Himmat</span>
+          <span class="scroll-title">She Is Brave</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text">Woh Darr Ke Bhi Nahi Rukti.<br><br>She walks into temples alone at night, facing the crowd with quiet courage. Brave enough to feel deeply, brave enough to show it on her face — without armour, without apology.<br><br>Like a hibiscus blooming boldly in the cold — she doesn't wait for the right conditions. She blooms anyway.</p>
+          <div class="scroll-quote">"Jo darr ke bhi aage badhti hai, woh asli himmatwar hai."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 2 — ZEHEN -->
+    <div class="sacred-scroll" data-scroll="2">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">02</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Zehen</span>
+          <span class="scroll-title">She Is Smart</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text">Dimagh Bhi, Dil Bhi.<br><br>She carries knowledge the way she carries her bag — heavy, purposeful, always ready. Her mind moves faster than most. She figures things out while others are still reading the question.<br><br>Sunflower smart — always turning toward the light, always knowing which way the sun rises.</p>
+          <div class="scroll-quote">"Aql bhi ishq hai, jab sahi kaam aaye."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 3 — HUSN -->
+    <div class="sacred-scroll" data-scroll="3">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">03</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Husn</span>
+          <span class="scroll-title">She Is Beautiful</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text">Roshni Usse Dhundh Leti Hai.<br><br>The kind of beautiful that doesn't need a filter or a spotlight. It lives in the tilt of her head, the softness of her smile, the gold necklace resting just so — as if the world arranged itself around her without being asked.<br><br>Hibiscus and sunflower both — as vibrant as her. Nusrat knew this feeling well.</p>
+          <div class="scroll-quote">"Soorat bhi teri, seerat bhi teri — dono kamaal hain."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 4 — KHEL -->
+    <div class="sacred-scroll" data-scroll="4">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">04</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Khel</span>
+          <span class="scroll-title">Her Football IQ Beats Mine</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text">Usse Football Ki Zyada Samajh Hai... Aur Main Maan Chuka Hoon.<br><br>She knows formations better than I do. She calls offsides before the flag goes up. She predicts the substitution before the manager even looks at the bench. And honestly? It is the most attractive thing ever.<br><br>I bow down gladly. Some battles are not meant to be won.</p>
+          <div class="scroll-quote">"Khilaadi ho ya khiladi ki fan, jab ilm ho to dil jeet leti ho." — And Nusrat's "Dum Mast Qalandar" — that is the energy when she talks football.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 5 — UTD -->
+    <div class="sacred-scroll scroll-utd" data-scroll="5">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">05</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Manchester United</span>
+          <span class="scroll-title">The Red Devils — Humare</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text" style="color:#ffdddd;">She bleeds red. She knows every chant. She watches replays. She argues tactics at midnight. She loves United the way they deserve to be loved — unconditionally, even when it hurts. Especially when it hurts.<br><br>Nusrat had "Allah Hoo." Vanshika has the United anthem. The Theatre of Dreams belongs to her too.</p>
+          <div class="utd-badges">
+            <div class="utd-badge">🔴 Bleeds Red</div>
+            <div class="utd-badge">⚽ Knows the Game</div>
+            <div class="utd-badge">🏆 Never Gives Up</div>
+            <div class="utd-badge">👑 Glory Glory Man United</div>
+          </div>
+          <div class="scroll-quote">"Theatre of Dreams — and she belongs there."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 6 — DIL -->
+    <div class="sacred-scroll" data-scroll="6">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">06</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Dil</span>
+          <span class="scroll-title">Her Warmth</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text">Woh Gehri Hai — Aur Uss Mein Doobna Acha Lagta Hai.<br><br>The kind of warmth that stays after she leaves. The kind that makes butterscotch taste sweeter and chocolate richer. She cares deeply, feels fully, and gives without keeping count — as if love were not a resource that runs out but a river that only grows.<br><br>Chocolates remind me of her sweetness. Butterscotch ice cream reminds me of her gold.</p>
+          <div class="scroll-quote">"Tumhara dard meri khushi se zyada zaruri hai."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 7 — ROOH -->
+    <div class="sacred-scroll" data-scroll="7">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">07</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Rooh</span>
+          <span class="scroll-title">Her Spirit — The Nusrat Connection</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text">Nusrat Fateh Ali Khan sang of a love so complete, so overwhelming, it felt like the universe itself — as if the divine and the beloved had become one indistinguishable thing.<br><br>She brings the room alive without trying. Her laughter is contagious. Her presence is a blessing. Her spirit is a live qawwali at full volume — pure magic, no explanation needed.</p>
+          <div class="scroll-quote">"Yeh jo halka halka suroor hai..." — that is exactly how she makes you feel.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 8 — MOHABBAT -->
+    <div class="sacred-scroll" data-scroll="8">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">08</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Mohabbat</span>
+          <span class="scroll-title">The Way She Loves</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text">Ek Baar Jo Apna Maane, Toh Sachchi Wali Dosti.<br><br>She doesn't do things halfway. When she cares, you feel it — in every text, every laugh, every moment of quiet presence. She stands by the people she loves like Manchester United stands by their badge — through bad seasons, bad results, still showing up. Still singing.</p>
+          <div class="scroll-quote">"Sanu ek pal chain na aave..." — Nusrat ne socha hoga Vanshika jaisi kisi ke baare mein.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 9 — CHOTI CHOTI BAATEIN -->
+    <div class="sacred-scroll" data-scroll="9">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">09</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Choti Choti Baatein</span>
+          <span class="scroll-title">The Little Things</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <div class="things-grid">
+            <div class="thing-card"><span class="thing-num">01</span>The way her smile tilts when she's amused — the whole world softens.</div>
+            <div class="thing-card"><span class="thing-num">02</span>Always right with her predictions. Every. Single. Time. It's almost unfair.</div>
+            <div class="thing-card"><span class="thing-num">03</span>So brave, all the time, without even trying — as if courage is just her default mode.</div>
+            <div class="thing-card"><span class="thing-num">04</span>The most understanding and empathetic person I know. Genuinely.</div>
+            <div class="thing-card"><span class="thing-num">05</span>Her vibe — pure Nusrat suroor. Golden, warm, impossible to ignore.</div>
+            <div class="thing-card"><span class="thing-num">06</span>Her funny pyjamas that somehow make everything infinitely better.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL 10 — AUR SABSE BADI BAAT -->
+    <div class="sacred-scroll scroll-final" data-scroll="10">
+      <div class="scroll-header" onclick="toggleScroll(this)">
+        <div class="scroll-num">10</div>
+        <div class="scroll-title-wrap">
+          <span class="scroll-urdu">Aur Sabse Badi Baat</span>
+          <span class="scroll-title">Woh Sirf Vanshika Hai</span>
+        </div>
+        <div class="scroll-caret"></div>
+      </div>
+      <div class="scroll-body">
+        <div class="scroll-inner">
+          <p class="scroll-body-text" style="color:var(--ice-blue);">
+            Main tumse pyaar karta hoon — not just as a feeling, but as a fact.<br><br>
+            Tum mujhe roz inspire karti ho. Tumhari himmat, tumhari zehen, tumhari rooh — yeh extraordinary hain. Tum mere saath hone wali sabse achhi cheez ho. Aur main yeh roz mehsoos karta hoon.<br><br>
+            Yeh sirf das cheezein hain. Asli list kabhi khatam nahi hoti.
+          </p>
+          <div class="scroll-quote" style="border-left-color:var(--ice-blue);color:var(--gold-light);font-size:1.05rem;">"Afreen afreen afreen afreen..." — Nusrat Fateh Ali Khan</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /scroll-spine -->
+</section>
+
 <!-- MESSAGE -->
 <section class="message-section">
   <div class="section-rule"></div>
@@ -810,7 +1202,30 @@ window.addEventListener('resize', () => {
   canvas.width = W; canvas.height = H;
 });
 
-// COUNTDOWN to April 11 2026
+// ═══════════════════════════════
+// SACRED SCROLLS — accordion + reveal
+// ═══════════════════════════════
+function toggleScroll(headerEl) {
+  const card = headerEl.closest('.sacred-scroll');
+  const isOpen = card.classList.contains('active-scroll');
+  // close all
+  document.querySelectorAll('.sacred-scroll').forEach(s => s.classList.remove('active-scroll'));
+  // open clicked unless it was already open
+  if (!isOpen) card.classList.add('active-scroll');
+}
+
+// Intersection observer — slide in as user scrolls
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      scrollObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.sacred-scroll').forEach(el => scrollObserver.observe(el));
+
 function tick() {
   const target = new Date('2026-04-11T00:00:00');
   const diff = target - new Date();
